@@ -76,22 +76,21 @@ var cookiesOnly = function(desserts) {
 
 // return the total price of all products.
 var sumTotal = function(products) {
-  var sum = _.reduce(products, function(currentTotal, addition) {
-    addition = addition.price;
-    addition = addition.slice(1);
-    addition = parseFloat(addition);
-    return currentTotal + addition;
+  var total = _.reduce(products, function(totalCost, item) {
+    var currentCost = item.price;
+    currentCost = currentCost.slice(1);
+    currentCost = parseFloat(currentCost);
+    return totalCost + currentCost;
   }, 0);
-  return sum;
+  return total;
 };
 
 // return an object consisting of dessert types and how many of each.
 // exampleOutput: { dessertType: 3, dessertType2: 1 }
 var dessertCategories = function(desserts) {
-  var dessertTypes = _.reduce(desserts, function(categories, currentDessert) {
-    currentDessert = currentDessert.type;
-    categories[currentDessert] = (categories[currentDessert] || 0) + 1;
-    return categories;
+  var dessertTypes = _.reduce(desserts, function(categoryCount, dessert) {
+    categoryCount[dessert.type] = (categoryCount[dessert.type] || 0) + 1;
+    return categoryCount;
   }, {});
   return dessertTypes;
 };
@@ -100,26 +99,26 @@ var dessertCategories = function(desserts) {
 // movies that came out between 1990 and 2000.
 // TIP: use an array as your accumulator - don't push to an external array!
 var ninetiesKid = function(movies) {
-  var ninetiesMovies = _.reduce(movies, function(movieList, currentMovie) {
-    if (currentMovie.releaseYear >= 1990 && currentMovie.releaseYear < 2000) {
-      movieList.push(currentMovie.title);
+  movies = _.reduce(movies, function(ninetiesTitles, movie) {
+    if (movie.releaseYear >= 1990 && movie.releaseYear < 2000) {
+      ninetiesTitles.push(movie.title);
     }
-    return movieList;
+    return ninetiesTitles;
   }, []);
-  return ninetiesMovies;
+  return movies;
 };
 
 // return an boolean stating if there exists a movie with a shorter
 // runtime than your time limit.
 // timeLimit is an integer representing a number of minutes.
 var movieNight = function(movies, timeLimit) {
-  var inTime = _.reduce(movies, function(limit, currentMovie) {
-    if (currentMovie.runtime < timeLimit) {
-      limit = true;
+  var withinLimit = _.reduce(movies, function(limitCheck, movie) {
+    if (movie.runtime < timeLimit) {
+      limitCheck = true;
     }
-    return limit;
+    return limitCheck;
   }, false);
-  return inTime;
+  return withinLimit;
 };
 
 /*
@@ -131,17 +130,17 @@ var movieNight = function(movies, timeLimit) {
 // given an array of strings, use _.map to return a new array containing all
 // strings converted to uppercase letters.
 var upperCaseFruits = function(fruits) {
-  var upStyle = _.map(fruits, function(fruit) {
+  fruits = _.map(fruits, function(fruit) {
     return fruit.toUpperCase();
   });
-  return upStyle;
+  return fruits;
 };
 
 // given an array of dessert objects, return a new array of objects
 // that have a new "glutenFree" property, with a boolean value.
 // TIP: Items that contain flour are not gluten-free.
 var glutenFree = function(desserts) {
-  var gluten = _.map(desserts, function(dessert) {
+  var glutenLog = _.map(desserts, function(dessert) {
     if (_.each(dessert.ingredients, function(ingredient) { return ingredient !== 'flour'; })) {
       dessert.glutenFree = true;
       return dessert;
@@ -150,7 +149,7 @@ var glutenFree = function(desserts) {
       return dessert;
     }
   });
-  return gluten;
+  return glutenLog;
 };
 
 // use _.map to return an array of items with their sale prices, with a new property
@@ -174,13 +173,13 @@ var glutenFree = function(desserts) {
 
 */
 var applyCoupon = function(groceries, coupon) {
-  var discounted = _.map(groceries, function(grocery) {
-    var startingPrice = grocery.price;
-    startingPrice = startingPrice.slice(1);
-    startingPrice = parseFloat(startingPrice);
-    var discountedPrice = '$' + (startingPrice - (startingPrice * coupon)).toFixed(2);
-    grocery.salePrice = discountedPrice;
+  var salesPrices = _.map(groceries, function(grocery) {
+    var currentCost = grocery.price;
+    currentCost = currentCost.slice(1);
+    currentCost = parseFloat(currentCost);
+    var salesCost = '$' + (currentCost - (currentCost * coupon).toFixed(2));
+    grocery.salePrice = salesCost;
     return grocery;
   });
-  return discounted;
+  return salesPrices;
 };
